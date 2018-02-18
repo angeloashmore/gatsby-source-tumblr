@@ -8,13 +8,13 @@ export const createClient = ({ blogIdentifier, consumerKey }) => async (
   endpoint,
   query = {},
 ) => {
-  const resolvedURL = url.resolve(URL_BASE, endpoint)
+  const resolvedURL = url.resolve(URL_BASE + blogIdentifier + '/', endpoint)
   const stringifiedQuery = querystring.stringify({
     api_key: consumerKey,
     ...query,
   })
 
-  const response = await fetch(resolvedURL + '?' + stringifiedQuery)
+  const response = await fetch(resolvedURL + `?` + stringifiedQuery)
   const json = await response.json()
 
   return json
@@ -28,7 +28,7 @@ const pagedGet = async (
   limit = 20,
   aggregatedResponse = null,
 ) => {
-  const response = await client(endpoint, {
+  const { response } = await client(endpoint, {
     ...query,
     offset,
     limit,
